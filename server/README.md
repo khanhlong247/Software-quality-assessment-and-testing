@@ -38,15 +38,15 @@
 │   │   │   └── user.service.js
 │   │   └── api-docs/
 │   │       └── swagger.js
-│   ├── common/
-│   │   └── middlewares/
-│   │       ├── auth.middlewares.js
-│   │       ├── check.middlewares.js
-│   │       ├── role.middlewares.js
-│   │       └── utils/
-│   └── env/
-│       ├── .env
-│       └── .gitignore
+│   └── common/
+│       └── middlewares/
+│       │   ├── auth.middlewares.js
+│       │   ├── check.middlewares.js
+│       │   └── role.middlewares.js
+│       └─── utils/
+│
+├──.env
+├──.gitignore
 ├── app.js
 ├── package-lock.json
 ├── package.json
