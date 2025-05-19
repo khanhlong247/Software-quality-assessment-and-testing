@@ -25,10 +25,14 @@ app.use(morgan("dev"));
 // Define routes
 const userRoutes = require("./src/api/routes/user.routes");
 const authRoutes = require("./src/api/routes/auth.routes");
+const degreeRoutes = require("./src/api/routes/degree.routes");
+const facultyRoutes = require("./src/api/routes/faculty.routes");
 
 // Use routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/degrees", degreeRoutes);
+app.use("/api/faculties", facultyRoutes);
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
