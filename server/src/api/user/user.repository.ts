@@ -1,6 +1,8 @@
 import type { User } from "@/api/user/user.model";
 import db from "../configs/database";
 
+export type UserField = "id" | "email";
+
 export class UserRepository {
 	async getAllUsers(): Promise<User[]> {
 		const result = await db("users").select("*");
@@ -39,4 +41,15 @@ export class UserRepository {
 	async deleteUser(id: number): Promise<number> {
 		return await db("users").where({ id }).del();
 	}
+
+	async isUserExists(
+		field: "id" | "email",
+		value: string | number
+	): Promise<boolean> {
+		const exists = await db("users")
+			.where({ [field]: value })
+			.first();
+		return !!exists;
+	}
+
 }

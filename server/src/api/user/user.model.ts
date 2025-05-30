@@ -10,10 +10,37 @@ export const UserSchema = z.object({
 	full_name: z.string(),
 	email: z.string().email(),
 	hash_password: z.string(),
-	role: z.string()
+	role: z.string(),
 });
 
 export const GetUserSchema = z.object({
 	params: z.object({ id: commonValidations.id }),
 });
 
+export const CreateUserSchema = z.object({
+	body: z.object({
+		full_name: commonValidations.full_name,
+		email: commonValidations.email,
+		password: commonValidations.password,
+	}),
+
+});
+
+export const UpdateUserSchema = z.object({
+	params: z.object({
+		id: commonValidations.id,
+	}),
+	body: z.object({
+		full_name: commonValidations.full_name,
+	}),
+});
+
+export const ChangePasswordSchema = z.object({
+	params: z.object({
+		id: commonValidations.id,
+	}),
+	body: z.object({
+		current_password: commonValidations.password,
+		new_password: commonValidations.password,
+	}),
+});
