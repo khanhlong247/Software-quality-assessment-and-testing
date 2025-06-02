@@ -1,8 +1,8 @@
 import { StatusCodes } from "http-status-codes";
-import type { User } from "@/api/user/user.model";
-import { UserRepository, UserField } from "@/api/user/user.repository";
-import { ServiceResponse } from "@/common/models/serviceResponse";
 import { logger } from "@/server";
+import type { User } from "@/api/user/user.model";
+import { UserRepository } from "@/api/user/user.repository";
+import { ServiceResponse } from "@/common/models/serviceResponse";
 import { hashPassword, checkPassword } from "@/common/utils/passwordHandlers";
 
 export class UserService {
@@ -36,7 +36,7 @@ export class UserService {
 
 	async getUserById(id: number): Promise<ServiceResponse<User | null>> {
 		try {
-			const user = await this.userRepository.getUserById(id);
+			const user = await this.userRepository.getUserBy("id", id);
 			if (!user) {
 				logger.error("User not found!");
 				return ServiceResponse.failure(
@@ -61,7 +61,8 @@ export class UserService {
 	async createUser(
 		full_name: string,
 		email: string,
-		plain_password: string
+		plain_password: string,
+		role: string
 	): Promise<ServiceResponse<number | null>> {
 		try {
 			const emailExists = await this.userRepository.isUserExists("email", email);
@@ -79,7 +80,7 @@ export class UserService {
 				full_name,
 				email,
 				hash_password,
-				"user"
+				role
 			);
 			return ServiceResponse.success("User created", id, StatusCodes.CREATED);
 		} catch (error) {
@@ -95,71 +96,64 @@ export class UserService {
 
 	async updateUser(
 		id: number,
-		full_name: string
+		full_name: string,
+		phone: string,
+		email: string,
 	): Promise<ServiceResponse<number | null>> {
 		try {
-			const userExists = await this.userRepository.isUserExists("id", id);
-			if (!userExists) {
-				logger.error("User not found!");
+			const teacherExists = await this.userRepository.getUserBy("id", id);
+			if (!teacherExists) {
+				logger.error("Teacher not found for update!");
 				return ServiceResponse.failure(
-					"User not found!",
+					"Teacher not found",
 					null,
 					StatusCodes.NOT_FOUND
 				);
 			}
-			const result = await this.userRepository.updateUser(id, full_name);
-			return ServiceResponse.success("User updated", result);
+
+			const phoneExists = await this.userRepository.getUserBy(
+				"phone",
+				phone
+			);
+			const emailExists = await this.userRepository.getUserBy(
+				"email",
+				email
+			);
+			if (phoneExists && phoneExists.id !== id) {
+				logger.error(
+					`Phone number ${phone} already exists for another user!`
+				);
+				return ServiceResponse.failure(
+					"Phone number already exists",
+					null,
+					StatusCodes.CONFLICT
+				);
+			}
+
+			if (emailExists && emailExists.id !== id) {
+				logger.error(`Email ${email} already exists for another user!`);
+				return ServiceResponse.failure(
+					"Email already exists",
+					null,
+					StatusCodes.CONFLICT
+				);
+			}
+
+			const result = await this.userRepository.updateUser(
+				id,
+				full_name,
+				phone,
+				email,
+			);
+			return ServiceResponse.success<number>(
+				"User updated successfully",
+				result
+			);
 		} catch (error) {
 			const errorMessage = `Error updating user:, ${(error as Error).message}`;
 			logger.error(errorMessage);
 			return ServiceResponse.failure(
 				"An error occurred while updating user.",
-				null,
-				StatusCodes.INTERNAL_SERVER_ERROR
-			);
-		}
-	}
-	async changePassword(
-		id: number,
-		current_password: string,
-		new_password: string
-	): Promise<ServiceResponse<number | null>> {
-		try {
-			const user = await this.userRepository.getUserById(id);
-			if (!user) {
-				logger.error("User not found!");
-				return ServiceResponse.failure(
-					"User not found!.",
-					null,
-					StatusCodes.NOT_FOUND
-				);
-			}
-			const current_hash_password = user?.hash_password;
-			const isCorrectPassword = await checkPassword(
-				current_password,
-				current_hash_password
-			);
-
-			if (!isCorrectPassword) {
-				logger.error("Current password incorrect!");
-				return ServiceResponse.failure(
-					"Current user password incorrect",
-					null,
-					StatusCodes.CONFLICT
-				);
-			}
-			const new_hash_password = await hashPassword(new_password);
-			const result = await this.userRepository.updatePassword(
-				id,
-				new_hash_password
-			);
-			return ServiceResponse.success("User updated", result);
-		} catch (error) {
-			const errorMessage = `Error changing user password:, ${(error as Error).message
-				}`;
-			logger.error(errorMessage);
-			return ServiceResponse.failure(
-				"An error occurred while changing user password.",
 				null,
 				StatusCodes.INTERNAL_SERVER_ERROR
 			);

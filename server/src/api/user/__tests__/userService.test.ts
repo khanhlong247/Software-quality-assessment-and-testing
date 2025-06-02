@@ -11,7 +11,7 @@ describe("userService", () => {
 	let userServiceInstance: UserService;
 	let userRepositoryInstance: UserRepository;
 
-	const mockUsers: User[] = [
+	const mockUsers = [
 		{
 			id: 1,
 			name: "Alice",
@@ -38,10 +38,10 @@ describe("userService", () => {
 	describe("findAll", () => {
 		it("return all users", async () => {
 			// Arrange
-			(userRepositoryInstance.findAllAsync as Mock).mockReturnValue(mockUsers);
+			(userRepositoryInstance.getAllUsers as Mock).mockReturnValue(mockUsers);
 
 			// Act
-			const result = await userServiceInstance.findAll();
+			const result = await userServiceInstance.getAllUsers();
 
 			// Assert
 			expect(result.statusCode).toEqual(StatusCodes.OK);
@@ -52,10 +52,10 @@ describe("userService", () => {
 
 		it("returns a not found error for no users found", async () => {
 			// Arrange
-			(userRepositoryInstance.findAllAsync as Mock).mockReturnValue(null);
+			(userRepositoryInstance.getAllUsers as Mock).mockReturnValue(null);
 
 			// Act
-			const result = await userServiceInstance.findAll();
+			const result = await userServiceInstance.getAllUsers();
 
 			// Assert
 			expect(result.statusCode).toEqual(StatusCodes.NOT_FOUND);
@@ -66,10 +66,10 @@ describe("userService", () => {
 
 		it("handles errors for findAllAsync", async () => {
 			// Arrange
-			(userRepositoryInstance.findAllAsync as Mock).mockRejectedValue(new Error("Database error"));
+			(userRepositoryInstance.getAllUsers as Mock).mockRejectedValue(new Error("Database error"));
 
 			// Act
-			const result = await userServiceInstance.findAll();
+			const result = await userServiceInstance.getAllUsers();
 
 			// Assert
 			expect(result.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -84,10 +84,10 @@ describe("userService", () => {
 			// Arrange
 			const testId = 1;
 			const mockUser = mockUsers.find((user) => user.id === testId);
-			(userRepositoryInstance.findByIdAsync as Mock).mockReturnValue(mockUser);
+			(userRepositoryInstance.getUserById as Mock).mockReturnValue(mockUser);
 
 			// Act
-			const result = await userServiceInstance.findById(testId);
+			const result = await userServiceInstance.getUserById(testId);
 
 			// Assert
 			expect(result.statusCode).toEqual(StatusCodes.OK);
@@ -99,10 +99,10 @@ describe("userService", () => {
 		it("handles errors for findByIdAsync", async () => {
 			// Arrange
 			const testId = 1;
-			(userRepositoryInstance.findByIdAsync as Mock).mockRejectedValue(new Error("Database error"));
+			(userRepositoryInstance.getUserById as Mock).mockRejectedValue(new Error("Database error"));
 
 			// Act
-			const result = await userServiceInstance.findById(testId);
+			const result = await userServiceInstance.getUserById(testId);
 
 			// Assert
 			expect(result.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -114,10 +114,10 @@ describe("userService", () => {
 		it("returns a not found error for non-existent ID", async () => {
 			// Arrange
 			const testId = 1;
-			(userRepositoryInstance.findByIdAsync as Mock).mockReturnValue(null);
+			(userRepositoryInstance.getUserById as Mock).mockReturnValue(null);
 
 			// Act
-			const result = await userServiceInstance.findById(testId);
+			const result = await userServiceInstance.getUserById(testId);
 
 			// Assert
 			expect(result.statusCode).toEqual(StatusCodes.NOT_FOUND);
