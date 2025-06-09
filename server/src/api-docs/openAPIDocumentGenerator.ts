@@ -11,6 +11,7 @@ import { teacherRegistry } from "@/api/teacher/teacher.routes";
 import { semesterRegistry } from "@/api/semester/semester.routes";
 import { authRegistry } from "@/api/auth/auth.routes";
 import { courseRegistry } from "@/api/course/course.routes";
+import { classSectionRegistry } from "@/api/class_section/class_section.routes";
 export type OpenAPIDocument = ReturnType<
 	OpenApiGeneratorV3["generateDocument"]
 >;
@@ -24,9 +25,9 @@ export function generateOpenAPIDocument(): OpenAPIDocument {
 		facultyRegistry,
 		teacherRegistry,
 		semesterRegistry,
-		courseRegistry
+		courseRegistry,
+		classSectionRegistry,
 	]);
-	const generator = new OpenApiGeneratorV3(registry.definitions);
 
 	registry.registerComponent("securitySchemes", "bearerAuth", {
 		type: "http",
@@ -34,7 +35,7 @@ export function generateOpenAPIDocument(): OpenAPIDocument {
 		bearerFormat: "JWT",
 		description: "Enter your JWT token in the format: Bearer <token>",
 	});
-
+	const generator = new OpenApiGeneratorV3(registry.definitions);
 	return generator.generateDocument({
 		openapi: "3.0.0",
 		info: {

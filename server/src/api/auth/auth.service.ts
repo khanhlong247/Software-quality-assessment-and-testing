@@ -49,6 +49,7 @@ export class AuthService {
                 email: user.email,
                 full_name: user.full_name,
                 hash_password: user.hash_password,
+                role: user.role,
             },
             JWT_SECRET,
             { expiresIn: "1h" }
@@ -58,7 +59,7 @@ export class AuthService {
         return ServiceResponse.success(
             "Logged in!",
             token,
-            StatusCodes.NOT_FOUND
+            StatusCodes.OK
         );
     }
 }

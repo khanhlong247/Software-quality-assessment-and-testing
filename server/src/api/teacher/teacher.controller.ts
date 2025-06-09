@@ -14,7 +14,7 @@ class TeacherController {
     };
 
     public createTeacher: RequestHandler = async (req: Request, res: Response) => {
-        const { user_id, email, degree_id, faculty_id } = req.body;
+        const { user_id, degree_id, faculty_id } = req.body;
         const serviceResponse = await teacherService.createTeacher(
             user_id,
             degree_id,

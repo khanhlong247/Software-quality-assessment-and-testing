@@ -58,6 +58,40 @@ export class UserService {
 		}
 	}
 
+	async getMyself(req: Request): Promise<ServiceResponse<User | null>> {
+		try {
+			const userId = (req as any).user?.id;
+
+			if (!userId) {
+				return ServiceResponse.failure(
+					"User not authenticated",
+					null,
+					StatusCodes.UNAUTHORIZED
+				);
+			}
+
+			const user = await this.userRepository.getUserBy("id", userId);
+			if (!user) {
+				logger.error("User not found!");
+				return ServiceResponse.failure(
+					"User not found",
+					null,
+					StatusCodes.NOT_FOUND
+				);
+			}
+			return ServiceResponse.success<User>("User found", user);
+		} catch (ex) {
+			const errorMessage = `Error finding user, ${(ex as Error).message
+				}`;
+			logger.error(errorMessage);
+			return ServiceResponse.failure(
+				"An error occurred while finding user.",
+				null,
+				StatusCodes.INTERNAL_SERVER_ERROR
+			);
+		}
+	}
+
 	async createUser(
 		full_name: string,
 		email: string,
@@ -65,7 +99,10 @@ export class UserService {
 		role: string
 	): Promise<ServiceResponse<number | null>> {
 		try {
-			const emailExists = await this.userRepository.isUserExists("email", email);
+			const emailExists = await this.userRepository.isUserExists(
+				"email",
+				email
+			);
 			if (emailExists) {
 				logger.error("User with email already exists!");
 				return ServiceResponse.failure(
@@ -94,35 +131,75 @@ export class UserService {
 		}
 	}
 
-	async updateUser(
-		id: number,
-		full_name: string,
-		phone: string,
+	async changePassword(
 		email: string,
+		current_password: string,
+		new_password: string
 	): Promise<ServiceResponse<number | null>> {
 		try {
-			const teacherExists = await this.userRepository.getUserBy("id", id);
-			if (!teacherExists) {
-				logger.error("Teacher not found for update!");
+			const user = await this.userRepository.getUserBy("email", email);
+			if (!user) {
+				logger.error("User not found for password change!");
 				return ServiceResponse.failure(
-					"Teacher not found",
+					"User not found",
 					null,
 					StatusCodes.NOT_FOUND
 				);
 			}
 
-			const phoneExists = await this.userRepository.getUserBy(
-				"phone",
-				phone
+			const isPasswordValid = await checkPassword(
+				current_password,
+				user.hash_password
 			);
-			const emailExists = await this.userRepository.getUserBy(
-				"email",
-				email
-			);
-			if (phoneExists && phoneExists.id !== id) {
-				logger.error(
-					`Phone number ${phone} already exists for another user!`
+			if (!isPasswordValid) {
+				logger.error("Current password is incorrect!");
+				return ServiceResponse.failure(
+					"Current password is incorrect",
+					null,
+					StatusCodes.UNAUTHORIZED
 				);
+			}
+
+			const hash_password = await hashPassword(new_password);
+			const result = await this.userRepository.changePassword(
+				user.email,
+				hash_password
+			);
+			return ServiceResponse.success<number>(
+				"Password changed successfully",
+				result
+			);
+		} catch (error) {
+			const errorMessage = `Error changing password:, ${(error as Error).message
+				}`;
+			logger.error(errorMessage);
+			return ServiceResponse.failure(
+				"An error occurred while changing password.",
+				null,
+				StatusCodes.INTERNAL_SERVER_ERROR
+			);
+		}
+	}
+	async updateUser(
+		id: number,
+		full_name: string,
+		phone: string
+	): Promise<ServiceResponse<number | null>> {
+		try {
+			const isUserExists = await this.userRepository.getUserBy("id", id);
+			if (!isUserExists) {
+				logger.error("User not found for update!");
+				return ServiceResponse.failure(
+					"User not found",
+					null,
+					StatusCodes.NOT_FOUND
+				);
+			}
+
+			console.log(phone);
+			const phoneExists = await this.userRepository.getUserBy("phone", phone);
+			if (phoneExists && phoneExists.id !== id) {
+				logger.error(`Phone number ${phone} already exists for another user!`);
 				return ServiceResponse.failure(
 					"Phone number already exists",
 					null,
@@ -130,21 +207,7 @@ export class UserService {
 				);
 			}
 
-			if (emailExists && emailExists.id !== id) {
-				logger.error(`Email ${email} already exists for another user!`);
-				return ServiceResponse.failure(
-					"Email already exists",
-					null,
-					StatusCodes.CONFLICT
-				);
-			}
-
-			const result = await this.userRepository.updateUser(
-				id,
-				full_name,
-				phone,
-				email,
-			);
+			const result = await this.userRepository.updateUser(id, full_name, phone);
 			return ServiceResponse.success<number>(
 				"User updated successfully",
 				result
@@ -183,7 +246,6 @@ export class UserService {
 			);
 		}
 	}
-
 }
 
 export const userService = new UserService();

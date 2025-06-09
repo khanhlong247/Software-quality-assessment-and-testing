@@ -33,5 +33,6 @@ export const UpdateUserSchema = z.object({
 	}),
 	body: z.object({
 		full_name: commonValidations.full_name,
+		phone: commonValidations.phone,
 	}),
 });

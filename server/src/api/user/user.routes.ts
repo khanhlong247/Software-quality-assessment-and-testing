@@ -11,6 +11,7 @@ import {
 } from "@/api/user/user.model";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { userController } from "./user.controller";
+import { authenticate, authorize } from "@/common/middleware/auth";
 
 export const userRegistry = new OpenAPIRegistry();
 export const userRouter: Router = express.Router();
@@ -26,7 +27,12 @@ userRegistry.registerPath({
 	responses: createApiResponse(z.array(UserSchema), "Success"),
 });
 
-userRouter.get("/", userController.getAllUsers);
+userRouter.get(
+	"/",
+	authenticate,
+	authorize(["admin", "moderator"]),
+	userController.getAllUsers
+);
 
 // Get an user
 userRegistry.registerPath({
@@ -42,6 +48,20 @@ userRouter.get(
 	"/:id",
 	validateRequest(GetUserSchema),
 	userController.getUserById
+);
+// Get personal information of the logged-in user
+userRegistry.registerPath({
+	method: "get",
+	path: "/users/{id}/me",
+	tags: ["User"],
+	summary: "Get personal information of the logged-in user",
+	responses: createApiResponse(UserSchema, "Success"),
+});
+
+userRouter.get(
+	"/:id/me",
+	authenticate,
+	userController.getMyself
 );
 
 // Create an user
@@ -67,6 +87,7 @@ userRouter.post(
 	validateRequest(CreateUserSchema),
 	userController.createUser
 );
+
 
 // Update an user information
 userRegistry.registerPath({

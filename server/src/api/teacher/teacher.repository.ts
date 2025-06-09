@@ -3,7 +3,18 @@ import type { Teacher } from "@/api/teacher/teacher.model";
 
 export class TeacherRepository {
     async getAllTeachers(): Promise<Teacher[]> {
-        const result = await db("teachers").select("*");
+        const result = await db("teachers as t")
+            .join("users as u", "t.user_id", "u.id")
+            .join("degrees as d", "t.degree_id", "d.id")
+            .join("faculty as f", "t.faculty_id", "f.id")
+            .select(
+                "t.id",
+                "u.full_name",
+                "u.email",
+                "u.phone",
+                "d.full_name as degree",
+                "f.full_name as faculty"
+            );
         return result;
     }
 
@@ -39,19 +50,38 @@ export class TeacherRepository {
         field: "id" | "phone" | "email",
         value: string | number
     ): Promise<boolean> {
-        const exists = await db("teacher as t")
-            .join("user as u", "t.user_id", "u.id")
-            .where({ [`u.${field}`]: value })
+        console.log("THIS IS VALUES OF FIELD", field, value);
+        const exists = await db("teachers")
+            .join("users", "teachers.user_id", "users.id")
+            .where({ [`users.${field}`]: value })
             .first();
         return !!exists;
     }
     async getTeacherBy(
-        field: "id" | "phone" | "email",
+        field: "phone" | "email",
         value: string | number
     ): Promise<Teacher | null> {
-        const result = await db("teacher")
-            .join("user as u", "t.user_id", "u.id")
-            .where({ [`u.${field}`]: value })
+        const result = await db("teachers")
+            .join("users", "teachers.user_id", "users.id")
+            .where({ [`users.${field}`]: value })
+            .first();
+        return result;
+    }
+
+    async getTeacherById(id: number): Promise<Teacher | null> {
+        const result = await db("teachers as t")
+            .join("users as u", "t.user_id", "u.id")
+            .join("degrees as d", "t.degree_id", "d.id")
+            .join("faculty as f", "t.faculty_id", "f.id")
+            .select(
+                "t.id",
+                "u.full_name",
+                "u.email",
+                "u.phone",
+                "d.full_name as degree",
+                "f.full_name as faculty"
+            )
+            .where("t.id", id)
             .first();
         return result;
     }

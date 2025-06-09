@@ -13,29 +13,34 @@ class UserController {
 		const serviceResponse = await userService.getUserById(id);
 		res.status(serviceResponse.statusCode).send(serviceResponse);
 	};
+
+	public getMyself: RequestHandler = async (req: Request, res: Response) => {
+		const serviceResponse = await userService.getUserById((req as any).user.id);
+		res.status(serviceResponse.statusCode).send(serviceResponse);
+	};
 	public createUser: RequestHandler = async (req: Request, res: Response) => {
-		const { full_name, email, password } = req.body;
+		const { full_name, email, password, role } = req.body;
 		const serviceResponse = await userService.createUser(
 			full_name,
 			email,
-			password
+			password,
+			role
 		);
 		res.status(serviceResponse.statusCode).send(serviceResponse);
 	};
 	public updateUser: RequestHandler = async (req: Request, res: Response) => {
 		const id = Number.parseInt(req.params.id as string, 10);
-		const { full_name } = req.body;
-		const serviceResponse = await userService.updateUser(id, full_name);
+		const { full_name, phone } = req.body;
+		const serviceResponse = await userService.updateUser(id, full_name, phone);
 		res.status(serviceResponse.statusCode).send(serviceResponse);
 	};
 	public changePassword: RequestHandler = async (
 		req: Request,
 		res: Response
 	) => {
-		const id = Number.parseInt(req.params.id as string, 10);
-		const { current_password, new_password } = req.body;
+		const { email, current_password, new_password } = req.body;
 		const serviceResponse = await userService.changePassword(
-			id,
+			email,
 			current_password,
 			new_password
 		);

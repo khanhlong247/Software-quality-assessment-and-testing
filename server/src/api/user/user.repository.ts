@@ -22,12 +22,12 @@ export class UserRepository {
 		return id;
 	}
 
-	async updateUser(id: number, full_name: string, phone: string, email: string): Promise<number> {
-		const result = await db("users").where({ id }).update({ full_name });
+	async updateUser(id: number, full_name: string, phone: string): Promise<number> {
+		const result = await db("users").where({ id }).update({ full_name, phone });
 		return result;
 	}
 
-	async updatePassword(email: string, hash_password: string): Promise<number> {
+	async changePassword(email: string, hash_password: string): Promise<number> {
 		const result = await db("users").where({ email }).update({ hash_password });
 		return result;
 	}

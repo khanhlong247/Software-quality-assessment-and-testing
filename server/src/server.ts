@@ -17,6 +17,7 @@ import { teacherRouter } from "./api/teacher/teacher.routes";
 import { semesterRouter } from "./api/semester/semester.routes";
 import { authRouter } from "./api/auth/auth.routes";
 import { courseRouter } from "./api/course/course.routes";
+import { classSectionRouter } from "./api/class_section/class_section.routes";
 
 const logger = pino({ name: "server start" });
 const app: Express = express();
@@ -43,6 +44,8 @@ app.use("/teachers", teacherRouter);
 app.use("/semesters", semesterRouter);
 app.use("/courses", courseRouter);
 app.use("/auth", authRouter);
+app.use("/class-sections", classSectionRouter);
+
 
 // Swagger UI
 app.use(openAPIRouter);

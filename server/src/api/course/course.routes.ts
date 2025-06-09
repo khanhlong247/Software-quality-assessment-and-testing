@@ -64,7 +64,7 @@ courseRegistry.registerPath({
     responses: createApiResponse(CourseSchema, "Success"),
 });
 
-degreeRouter.post(
+courseRouter.post(
     "/",
     validateRequest(CreateCourseSchema),
     courseController.createCourse
@@ -89,7 +89,7 @@ courseRegistry.registerPath({
     responses: createApiResponse(CourseSchema, "Success"),
 });
 
-degreeRouter.put(
+courseRouter.put(
     "/:id",
     validateRequest(UpdateCourseSchema),
     courseController.updateCourse
@@ -107,7 +107,7 @@ courseRegistry.registerPath({
     },
     responses: createApiResponse(CourseSchema, "Success"),
 });
-degreeRouter.delete(
+courseRouter.delete(
     "/:id",
     validateRequest(GetCourseSchema),
     courseController.deleteCourse
