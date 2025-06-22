@@ -195,8 +195,6 @@ export class UserService {
 					StatusCodes.NOT_FOUND
 				);
 			}
-
-			console.log(phone);
 			const phoneExists = await this.userRepository.getUserBy("phone", phone);
 			if (phoneExists && phoneExists.id !== id) {
 				logger.error(`Phone number ${phone} already exists for another user!`);

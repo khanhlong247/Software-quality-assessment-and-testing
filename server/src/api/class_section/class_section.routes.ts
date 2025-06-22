@@ -4,12 +4,14 @@ import { z } from "zod";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 
+import { authenticate, authorize } from "@/common/middleware/auth";
 import {
-    ClassSectionSchema,
-    GetClassSchema,
-    CreateClassSchema,
-    UpdateClassSchema,
-    DeleteClassSchema,
+  ClassSectionSchema,
+  GetClassSchema,
+  CreateClassSchema,
+  UpdateClassSchema,
+  DeleteClassSchema,
+  CreateMultiClassSchema,
 } from "@/api/class_section/class_section.model";
 
 import { classSectionController } from "./class_section.controller";
@@ -19,95 +21,132 @@ classSectionRegistry.register("ClassSection", ClassSectionSchema);
 
 // Get all class sections
 classSectionRegistry.registerPath({
-    method: "get",
-    path: "/class-sections",
-    tags: ["Class Section"],
-    summary: "Get class section list",
-    responses: createApiResponse(z.array(ClassSectionSchema), "Success"),
-});
-
-classSectionRouter.get("/", classSectionController.getAllClassSections);
-
-
-// Get a class section
-classSectionRegistry.registerPath({
-    method: "get",
-    path: "/class-sections/{id}",
-    tags: ["Class Section"],
-    summary: "Get a class section by id",
-    request: { params: GetClassSchema.shape.params },
-    responses: createApiResponse(ClassSectionSchema, "Success"),
+  method: "get",
+  path: "/class-sections",
+  tags: ["Class Section (Lớp học phần)"],
+  summary: "Get class section list",
+  responses: createApiResponse(z.array(ClassSectionSchema), "Success"),
 });
 
 classSectionRouter.get(
-    "/:id",
-    validateRequest(GetClassSchema),
-    classSectionController.getClassSectionById
+  "/",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  classSectionController.getAllClassSections
+);
+
+// Get a class section
+classSectionRegistry.registerPath({
+  method: "get",
+  path: "/class-sections/{id}",
+  tags: ["Class Section (Lớp học phần)"],
+  summary: "Get a class section by id",
+  request: { params: GetClassSchema.shape.params },
+  responses: createApiResponse(ClassSectionSchema, "Success"),
+});
+
+classSectionRouter.get(
+  "/:id",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  validateRequest(GetClassSchema),
+  classSectionController.getClassSectionById
 );
 
 // Create a class section
 classSectionRegistry.registerPath({
-    method: "post",
-    path: "/class-sections",
-    tags: ["Class Section"],
-    summary: "Create a class section",
-    request: {
-        body: {
-            content: {
-                "application/json": {
-                    schema: CreateClassSchema.shape.body,
-                },
-            },
+  method: "post",
+  path: "/class-sections",
+  tags: ["Class Section (Lớp học phần)"],
+  summary: "Create a class section",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: CreateClassSchema.shape.body,
         },
+      },
     },
-    responses: createApiResponse(ClassSectionSchema, "Success"),
+  },
+  responses: createApiResponse(ClassSectionSchema, "Success"),
 });
 
 classSectionRouter.post(
-    "/",
-    validateRequest(CreateClassSchema),
-    classSectionController.createClassSection
+  "/",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  validateRequest(CreateClassSchema),
+  classSectionController.createClassSection
+);
+
+// Create multiply class section
+classSectionRegistry.registerPath({
+  method: "post",
+  path: "/class-sections/multi-create",
+  tags: ["Class Section (Lớp học phần)"],
+  summary: "Create multiply class section",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: CreateMultiClassSchema.shape.body,
+        },
+      },
+    },
+  },
+  responses: createApiResponse(ClassSectionSchema, "Success"),
+});
+
+classSectionRouter.post(
+  "/multi-create",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  validateRequest(CreateMultiClassSchema),
+  classSectionController.createMultipleClassSections
 );
 
 // Update a class section information
 classSectionRegistry.registerPath({
-    method: "put",
-    path: "/class-sections/{id}",
-    tags: ["Class Section"],
-    summary: "Update class section information",
-    request: {
-        params: UpdateClassSchema.shape.params,
-        body: {
-            content: {
-                "application/json": {
-                    schema: UpdateClassSchema.shape.body,
-                },
-            },
+  method: "put",
+  path: "/class-sections/{id}",
+  tags: ["Class Section (Lớp học phần)"],
+  summary: "Update class section information",
+  request: {
+    params: UpdateClassSchema.shape.params,
+    body: {
+      content: {
+        "application/json": {
+          schema: UpdateClassSchema.shape.body,
         },
+      },
     },
-    responses: createApiResponse(ClassSectionSchema, "Success"),
+  },
+  responses: createApiResponse(ClassSectionSchema, "Success"),
 });
 
 classSectionRouter.put(
-    "/:id",
-    validateRequest(UpdateClassSchema),
-    classSectionController.updateClassSection
+  "/:id",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  validateRequest(UpdateClassSchema),
+  classSectionController.updateClassSection
 );
-
 
 // Delete a class section
 classSectionRegistry.registerPath({
-    method: "delete",
-    path: "/class-sections/{id}",
-    tags: ["Class Section"],
-    summary: "Delete a class section",
-    request: {
-        params: DeleteClassSchema.shape.params,
-    },
-    responses: createApiResponse(ClassSectionSchema, "Success"),
+  method: "delete",
+  path: "/class-sections/{id}",
+  tags: ["Class Section (Lớp học phần)"],
+  summary: "Delete a class section",
+  request: {
+    params: DeleteClassSchema.shape.params,
+  },
+  responses: createApiResponse(ClassSectionSchema, "Success"),
 });
 classSectionRouter.delete(
-    "/:id",
-    validateRequest(DeleteClassSchema),
-    classSectionController.deleteClassSection
+  "/:id",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  validateRequest(DeleteClassSchema),
+  classSectionController.deleteClassSection
 );

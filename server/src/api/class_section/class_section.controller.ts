@@ -34,6 +34,21 @@ class ClassSectionController {
         );
         res.status(serviceResponse.statusCode).send(serviceResponse);
     };
+    public createMultipleClassSections: RequestHandler = async (
+        req: Request,
+        res: Response
+    ) => {
+        const { name, total_students, course_id, semester_id, count } =
+            req.body;
+        const serviceResponse = await classSectionService.createMultipleClassSections(
+            name,
+            total_students,
+            course_id,
+            semester_id,
+            count
+        );
+        res.status(serviceResponse.statusCode).send(serviceResponse);
+    };
 
     public updateClassSection: RequestHandler = async (
         req: Request,

@@ -1,8 +1,9 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Router } from "express";
 import { z } from "zod";
-
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
+
+import { authenticate, authorize } from "@/common/middleware/auth";
 import {
     SemesterSchema,
     GetSemesterSchema,
@@ -21,18 +22,19 @@ semesterRegistry.register("Semester", SemesterSchema);
 semesterRegistry.registerPath({
     method: "get",
     path: "/semesters",
-    tags: ["Semester"],
+    tags: ["Semester (Học kỳ)"],
     summary: "Get semesters list",
     responses: createApiResponse(z.array(SemesterSchema), "Success"),
 });
 
-semesterRouter.get("/", semesterController.getAllSemesters);
+semesterRouter.get("/",  authenticate,
+  authorize(["admin", "moderator"]), semesterController.getAllSemesters);
 
 // Get a semester
 semesterRegistry.registerPath({
     method: "get",
     path: "/semesters/{id}",
-    tags: ["Semester"],
+    tags: ["Semester (Học kỳ)"],
     summary: "Get a semester by ID",
     request: {
         params: GetSemesterSchema.shape.params,
@@ -41,7 +43,8 @@ semesterRegistry.registerPath({
 });
 
 semesterRouter.get(
-    "/:id",
+    "/:id",  authenticate,
+      authorize(["admin", "moderator"]),
     validateRequest(GetSemesterSchema),
     semesterController.getSemesterById
 );
@@ -50,7 +53,7 @@ semesterRouter.get(
 semesterRegistry.registerPath({
     method: "post",
     path: "/semesters",
-    tags: ["Semester"],
+    tags: ["Semester (Học kỳ)"],
     summary: "Create a semester",
     request: {
         body: {
@@ -65,7 +68,8 @@ semesterRegistry.registerPath({
 });
 
 semesterRouter.post(
-    "/",
+    "/",  authenticate,
+      authorize(["admin", "moderator"]),
     validateRequest(CreateSemesterSchema),
     semesterController.createSemester
 );
@@ -74,7 +78,7 @@ semesterRouter.post(
 semesterRegistry.registerPath({
     method: "put",
     path: "/semesters/{id}",
-    tags: ["Semester"],
+    tags: ["Semester (Học kỳ)"],
     summary: "Update semester information",
     request: {
         params: UpdateSemesterSchema.shape.params,
@@ -90,7 +94,8 @@ semesterRegistry.registerPath({
 });
 
 semesterRouter.put(
-    "/:id",
+    "/:id",  authenticate,
+      authorize(["admin", "moderator"]),
     validateRequest(UpdateSemesterSchema),
     semesterController.updateSemester
 );
@@ -100,7 +105,7 @@ semesterRouter.put(
 semesterRegistry.registerPath({
     method: "delete",
     path: "/semesters/{id}",
-    tags: ["Semester"],
+    tags: ["Semester (Học kỳ)"],
     summary: "Delete semester",
     request: {
         params: GetSemesterSchema.shape.params,
@@ -108,7 +113,8 @@ semesterRegistry.registerPath({
     responses: createApiResponse(SemesterSchema, "Success"),
 });
 semesterRouter.delete(
-    "/:id",
+    "/:id",  authenticate,
+      authorize(["admin", "moderator"]),
     validateRequest(GetSemesterSchema),
     semesterController.deleteSemester
 );

@@ -3,11 +3,12 @@ import express, { type Router } from "express";
 import { z } from "zod";
 
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
+import { authenticate, authorize } from "@/common/middleware/auth";
 import {
-    FacultySchema,
-    GetFaciultySchema,
-    CreateFacultySchema,
-    UpdateFacultySchema,
+  FacultySchema,
+  GetFaciultySchema,
+  CreateFacultySchema,
+  UpdateFacultySchema,
 } from "@/api/faculty/faculty.model";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { facultyController } from "./faculty.controller";
@@ -19,93 +20,106 @@ facultyRegistry.register("Faculty", FacultySchema);
 
 // Get all faculties
 facultyRegistry.registerPath({
-    method: "get",
-    path: "/faculties",
-    tags: ["Faculty"],
-    summary: "Get faculties list",
-    responses: createApiResponse(z.array(FacultySchema), "Success"),
-});
-
-facultyRouter.get("/", facultyController.getAllFaculties);
-
-// Get a faculty
-facultyRegistry.registerPath({
-    method: "get",
-    path: "/faculties/{id}",
-    tags: ["Faculty"],
-    summary: "Get a faculty by id",
-    request: { params: GetFaciultySchema.shape.params },
-    responses: createApiResponse(FacultySchema, "Success"),
+  method: "get",
+  path: "/faculties",
+  tags: ["Faculty (Khoa)"],
+  summary: "Get faculties list",
+  responses: createApiResponse(z.array(FacultySchema), "Success"),
 });
 
 facultyRouter.get(
-    "/:id",
-    validateRequest(GetFaciultySchema),
-    facultyController.getFacultyById
+  "/",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  facultyController.getAllFaculties
+);
+
+// Get a faculty
+facultyRegistry.registerPath({
+  method: "get",
+  path: "/faculties/{id}",
+  tags: ["Faculty (Khoa)"],
+  summary: "Get a faculty by id",
+  request: { params: GetFaciultySchema.shape.params },
+  responses: createApiResponse(FacultySchema, "Success"),
+});
+
+facultyRouter.get(
+  "/:id",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  validateRequest(GetFaciultySchema),
+  facultyController.getFacultyById
 );
 
 // Create a faculty
 facultyRegistry.registerPath({
-    method: "post",
-    path: "/faculties",
-    tags: ["Faculty"],
-    summary: "Create a faculty",
-    request: {
-        body: {
-            content: {
-                "application/json": {
-                    schema: CreateFacultySchema.shape.body,
-                },
-            },
+  method: "post",
+  path: "/faculties",
+  tags: ["Faculty (Khoa)"],
+  summary: "Create a faculty",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: CreateFacultySchema.shape.body,
         },
+      },
     },
-    responses: createApiResponse(FacultySchema, "Success"),
+  },
+  responses: createApiResponse(FacultySchema, "Success"),
 });
 
 facultyRouter.post(
-    "/",
-    validateRequest(CreateFacultySchema),
-    facultyController.createFaculty
+  "/",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  validateRequest(CreateFacultySchema),
+  facultyController.createFaculty
 );
 
-// Update a faculty 
+// Update a faculty
 facultyRegistry.registerPath({
-    method: "put",
-    path: "/faculties/{id}",
-    tags: ["Faculty"],
-    summary: "Update faculty information",
-    request: {
-        params: UpdateFacultySchema.shape.params,
-        body: {
-            content: {
-                "application/json": {
-                    schema: UpdateFacultySchema.shape.body,
-                },
-            },
+  method: "put",
+  path: "/faculties/{id}",
+  tags: ["Faculty (Khoa)"],
+  summary: "Update faculty information",
+  request: {
+    params: UpdateFacultySchema.shape.params,
+    body: {
+      content: {
+        "application/json": {
+          schema: UpdateFacultySchema.shape.body,
         },
+      },
     },
-    responses: createApiResponse(FacultySchema, "Success"),
+  },
+  responses: createApiResponse(FacultySchema, "Success"),
 });
 
 facultyRouter.put(
-    "/:id",
-    validateRequest(UpdateFacultySchema),
-    facultyController.updateFaculty
+  "/:id",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  validateRequest(UpdateFacultySchema),
+  facultyController.updateFaculty
 );
 
 // Delete a faculty
 facultyRegistry.registerPath({
-    method: "delete",
-    path: "/faculties/{id}",
-    tags: ["Faculty"],
-    summary: "Delete faculty",
-    request: {
-        params: GetFaciultySchema.shape.params,
-    },
-    responses: createApiResponse(FacultySchema, "Success"),
+  method: "delete",
+  path: "/faculties/{id}",
+  tags: ["Faculty (Khoa)"],
+  summary: "Delete faculty",
+  request: {
+    params: GetFaciultySchema.shape.params,
+  },
+  responses: createApiResponse(FacultySchema, "Success"),
 });
 facultyRouter.delete(
-    "/:id",
-    validateRequest(GetFaciultySchema),
-    facultyController.deleteFaculty
+  "/:id",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  validateRequest(GetFaciultySchema),
+  facultyController.deleteFaculty
 );

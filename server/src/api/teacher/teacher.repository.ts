@@ -50,7 +50,6 @@ export class TeacherRepository {
         field: "id" | "phone" | "email",
         value: string | number
     ): Promise<boolean> {
-        console.log("THIS IS VALUES OF FIELD", field, value);
         const exists = await db("teachers")
             .join("users", "teachers.user_id", "users.id")
             .where({ [`users.${field}`]: value })

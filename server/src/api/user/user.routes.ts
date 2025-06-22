@@ -4,10 +4,10 @@ import { z } from "zod";
 
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import {
-	CreateUserSchema,
-	GetUserSchema,
-	UpdateUserSchema,
-	UserSchema,
+  CreateUserSchema,
+  GetUserSchema,
+  UpdateUserSchema,
+  UserSchema,
 } from "@/api/user/user.model";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { userController } from "./user.controller";
@@ -20,113 +20,114 @@ userRegistry.register("User", UserSchema);
 
 // Get all users
 userRegistry.registerPath({
-	method: "get",
-	path: "/users",
-	tags: ["User"],
-	summary: "Get users list",
-	responses: createApiResponse(z.array(UserSchema), "Success"),
+  method: "get",
+  path: "/users",
+  tags: ["User"],
+  summary: "Get users list",
+  responses: createApiResponse(z.array(UserSchema), "Success"),
 });
 
 userRouter.get(
-	"/",
-	authenticate,
-	authorize(["admin", "moderator"]),
-	userController.getAllUsers
+  "/",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  userController.getAllUsers
 );
 
 // Get an user
 userRegistry.registerPath({
-	method: "get",
-	path: "/users/{id}",
-	tags: ["User"],
-	summary: "Get an user by id",
-	request: { params: GetUserSchema.shape.params },
-	responses: createApiResponse(UserSchema, "Success"),
+  method: "get",
+  path: "/users/{id}",
+  tags: ["User"],
+  summary: "Get an user by id",
+  request: { params: GetUserSchema.shape.params },
+  responses: createApiResponse(UserSchema, "Success"),
 });
 
 userRouter.get(
-	"/:id",
-	validateRequest(GetUserSchema),
-	userController.getUserById
+  "/:id",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  validateRequest(GetUserSchema),
+  userController.getUserById
 );
 // Get personal information of the logged-in user
 userRegistry.registerPath({
-	method: "get",
-	path: "/users/{id}/me",
-	tags: ["User"],
-	summary: "Get personal information of the logged-in user",
-	responses: createApiResponse(UserSchema, "Success"),
+  method: "get",
+  path: "/users/{id}/me",
+  tags: ["User"],
+  summary: "Get personal information of the logged-in user",
+  responses: createApiResponse(UserSchema, "Success"),
 });
 
-userRouter.get(
-	"/:id/me",
-	authenticate,
-	userController.getMyself
-);
+userRouter.get("/:id/me", authenticate, userController.getMyself);
 
 // Create an user
 userRegistry.registerPath({
-	method: "post",
-	path: "/users",
-	tags: ["User"],
-	summary: "Create an user",
-	request: {
-		body: {
-			content: {
-				"application/json": {
-					schema: CreateUserSchema.shape.body,
-				},
-			},
-		},
-	},
-	responses: createApiResponse(UserSchema, "Success"),
+  method: "post",
+  path: "/users",
+  tags: ["User"],
+  summary: "Create an user",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: CreateUserSchema.shape.body,
+        },
+      },
+    },
+  },
+  responses: createApiResponse(UserSchema, "Success"),
 });
 
 userRouter.post(
-	"/",
-	validateRequest(CreateUserSchema),
-	userController.createUser
+  "/",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  validateRequest(CreateUserSchema),
+  userController.createUser
 );
-
 
 // Update an user information
 userRegistry.registerPath({
-	method: "put",
-	path: "/users/{id}",
-	tags: ["User"],
-	summary: "Update user information",
-	request: {
-		params: GetUserSchema.shape.params,
-		body: {
-			content: {
-				"application/json": {
-					schema: UpdateUserSchema.shape.body,
-				},
-			},
-		},
-	},
-	responses: createApiResponse(UserSchema, "Success"),
+  method: "put",
+  path: "/users/{id}",
+  tags: ["User"],
+  summary: "Update user information",
+  request: {
+    params: GetUserSchema.shape.params,
+    body: {
+      content: {
+        "application/json": {
+          schema: UpdateUserSchema.shape.body,
+        },
+      },
+    },
+  },
+  responses: createApiResponse(UserSchema, "Success"),
 });
 
 userRouter.put(
-	"/:id",
-	validateRequest(UpdateUserSchema),
-	userController.updateUser
+  "/:id",
+  validateRequest(UpdateUserSchema),
+  userController.updateUser
 );
 
 // Delete an user information
 userRegistry.registerPath({
-	method: "delete",
-	path: "/users/{id}",
-	tags: ["User"],
-	summary: "Delete user information",
-	request: {
-		params: GetUserSchema.shape.params,
-	},
-	responses: createApiResponse(UserSchema, "Success"),
+  method: "delete",
+  path: "/users/{id}",
+  tags: ["User"],
+  summary: "Delete user information",
+  request: {
+    params: GetUserSchema.shape.params,
+  },
+  responses: createApiResponse(UserSchema, "Success"),
 });
 userRouter.delete(
-	"/:id",
-	validateRequest(GetUserSchema),
-	userController.deleteUser
+  "/:id",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  validateRequest(GetUserSchema),
+  userController.deleteUser
 );

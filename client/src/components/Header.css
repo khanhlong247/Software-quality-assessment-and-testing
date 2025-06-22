@@ -1,0 +1,86 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--table-border);
+}
+
+.header-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--link-color);
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+}
+
+.header-username {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.header-logout {
+  background-color: var(--logout-bg);
+  color: var(--button-text);
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid transparent;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.header-login {
+  background-color: var(--login-bg);
+  color: var(--button-text);
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid transparent;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.header-theme-toggle {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  border: 1px solid transparent;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.header-logout:hover {
+  background-color: var(--logout-hover-bg);
+}
+
+.header-login:hover {
+  background-color: var(--login-hover-bg);
+}
+
+.header-theme-toggle:hover {
+  background-color: var(--button-hover-bg);
+}
