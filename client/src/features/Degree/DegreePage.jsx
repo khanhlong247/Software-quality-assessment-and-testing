@@ -7,10 +7,13 @@ export default function DegreePage() {
   const [selected, setSelected] = useState(null);
   const [degrees, setDegrees] = useState([]);
   const [forbidden, setForbidden] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
+    setIsLoading(true);
     getAllDegrees()
       .then((res) => {
-        if ((error.response.status === 403 || error.response.status === 401)) {
+        if (error.response.status === 403 || error.response.status === 401) {
           setForbidden(true);
         } else if (res && res.success) {
           setFaculties(res.responseObject || []);
@@ -24,8 +27,18 @@ export default function DegreePage() {
         ) {
           setForbidden(true);
         }
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
   if (forbidden) {
     return (
       <div className="forbidden-message">

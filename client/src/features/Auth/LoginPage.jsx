@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { login } from "../../services/authService";
+import "./auth.css";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -32,34 +33,32 @@ export default function LoginPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-10 space-y-4">
-      <h1 className="text-xl font-bold">Đăng nhập</h1>
+    <div className="wrap-login">
+      <form onSubmit={handleSubmit}>
+        <h1>Đăng nhập</h1>
 
-      {error && (
-        <div className="bg-red-100 text-red-700 p-2 rounded">
-          {error}
+        {error && <div class="error">{error}</div>}
+        <div className="input-wrapper">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Mật khẩu"
+            value={form.password}
+            onChange={handleChange}
+          />
         </div>
-      )}
-
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
-        className="border p-2 w-full"
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Mật khẩu"
-        value={form.password}
-        onChange={handleChange}
-        className="border p-2 w-full"
-      />
-      <button className="bg-blue-500 text-white px-4 py-2 rounded" type="submit">
-        Đăng nhập
-      </button>
-    </form>
+        <div>
+          <Link to="/">Quay lại</Link>
+          <button type="submit">Đăng nhập</button>
+        </div>
+      </form>
+    </div>
   );
 }

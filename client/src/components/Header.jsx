@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./Header.css";
 
@@ -16,14 +16,12 @@ export default function Header() {
   const [isLightMode, setIsLightMode] = useState(false);
 
   useEffect(() => {
-    // Load token and user info
     const token = localStorage.getItem("token");
     if (token) {
       const decoded = parseJwt(token);
       setUser(decoded);
     }
 
-    // Load theme preference from localStorage
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "light") {
       document.documentElement.classList.add("light-mode");
@@ -56,22 +54,29 @@ export default function Header() {
 
       <div className="header-user">
         <div className="header-user-info">
-          <img
-            src="https://www.svgrepo.com/show/384674/account-avatar-profile-user-11.svg"
-            alt="avatar"
-            className="header-avatar"
-          />
+          <Link to="/profile">
+            <img
+              src="https://www.svgrepo.com/show/384674/account-avatar-profile-user-11.svg"
+              alt="avatar"
+              className="header-avatar cursor-pointer"
+              title="Xem hồ sơ"
+            />
+          </Link>
           <span className="header-username">
             {user?.full_name || "Chưa đăng nhập"}
           </span>
         </div>
+
         <button
           onClick={toggleTheme}
           className="header-theme-toggle"
-          title={isLightMode ? "Chuyển sang Dark Mode" : "Chuyển sang Light Mode"}
+          title={
+            isLightMode ? "Chuyển sang Dark Mode" : "Chuyển sang Light Mode"
+          }
         >
           {isLightMode ? "🌙" : "🌞"}
         </button>
+
         <button
           onClick={handleLogout}
           className={user?.full_name ? "header-logout" : "header-login"}

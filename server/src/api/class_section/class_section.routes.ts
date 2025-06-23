@@ -12,6 +12,7 @@ import {
   UpdateClassSchema,
   DeleteClassSchema,
   CreateMultiClassSchema,
+  ClassSectionSchemaDetail,
 } from "@/api/class_section/class_section.model";
 
 import { classSectionController } from "./class_section.controller";
@@ -33,6 +34,21 @@ classSectionRouter.get(
   authenticate,
   authorize(["admin", "moderator"]),
   classSectionController.getAllClassSections
+);
+// Get all class sections details
+classSectionRegistry.registerPath({
+  method: "get",
+  path: "/class-sections/details",
+  tags: ["Class Section (Lớp học phần)"],
+  summary: "Get class section list",
+  responses: createApiResponse(z.array(ClassSectionSchemaDetail), "Success"),
+});
+
+classSectionRouter.get(
+  "/details",
+  authenticate,
+  authorize(["admin", "moderator"]),
+  classSectionController.getAllClassSectionsDetails
 );
 
 // Get a class section

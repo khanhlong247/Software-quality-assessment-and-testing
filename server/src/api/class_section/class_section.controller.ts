@@ -9,6 +9,15 @@ class ClassSectionController {
         const serviceResponse = await classSectionService.getAllClassSections();
         res.status(serviceResponse.statusCode).send(serviceResponse);
     };
+    
+    public getAllClassSectionsDetails: RequestHandler = async (
+        _req: Request,
+        res: Response
+    ) => {
+        const serviceResponse = await classSectionService.getAllClassSectionsDetails();
+        console.log(serviceResponse);
+        res.status(serviceResponse.statusCode).send(serviceResponse);
+    };
 
     public getClassSectionById: RequestHandler = async (
         req: Request,

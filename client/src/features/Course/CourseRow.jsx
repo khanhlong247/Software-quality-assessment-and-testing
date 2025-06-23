@@ -2,7 +2,7 @@ import { deleteCourse } from "../../services/courseService";
 
 export default function CourseRow({ course, setSelected }) {
   const handleDelete = async () => {
-    if (window.confirm("Bạn có chắc muốn xoá?")) {
+    if (window.confirm("Bạn có chắc muốn xoá học phần? Tất cả dữ liệu liên quan sẽ bị xoá.")) {
       await deleteCourse(course.id);
       window.location.reload();
     }

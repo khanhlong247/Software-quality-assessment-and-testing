@@ -66,6 +66,16 @@ export default function Sidebar() {
               Quản lý Lớp học phần
             </NavLink>
           </li>
+          <li className="sidebar-nav-item">
+            <NavLink
+              to="/stats"
+              className={({ isActive }) =>
+                `sidebar-nav-link ${isActive ? "active" : ""}`
+              }
+            >
+              Báo cáo và thống kê
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </aside>

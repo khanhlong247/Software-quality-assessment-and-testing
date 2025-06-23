@@ -59,14 +59,14 @@ export default function TeacherForm({ onClose, reload, editData = null }) {
       <h2>{isEditMode ? "Sửa giảng viên" : "Thêm giảng viên mới"}</h2>
 
       <div>
-        <label>Người dùng:</label>
+        <label>Chọn thành viên:</label>
         <select
           name="user_id"
           value={form.user_id}
           onChange={handleChange}
           required
         >
-          <option value="">-- Chọn người dùng --</option>
+          <option value="">Chọn thành viên</option>
           {users.map((u) => (
             <option key={u.id} value={u.id}>
               {u.full_name || u.email}
@@ -83,7 +83,7 @@ export default function TeacherForm({ onClose, reload, editData = null }) {
           onChange={handleChange}
           required
         >
-          <option value="">-- Chọn khoa --</option>
+          <option value="">Chọn khoa</option>
           {faculties.map((f) => (
             <option key={f.id} value={f.id}>
               {f.full_name}
@@ -100,7 +100,7 @@ export default function TeacherForm({ onClose, reload, editData = null }) {
           onChange={handleChange}
           required
         >
-          <option value="">-- Chọn bằng cấp --</option>
+          <option value="">Chọn bằng cấp</option>
           {degrees.map((d) => (
             <option key={d.id} value={d.id}>
               {d.full_name}

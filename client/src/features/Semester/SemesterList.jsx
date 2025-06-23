@@ -4,21 +4,17 @@ import { getAllSemesters, deleteSemester } from "../../services/semesterService"
 export default function SemesterList({ setSelected, reloadFlag, reload }) {
   const [semesters, setSemesters] = useState([]);
 
-  // Helper function để format date cho hiển thị
   const formatDateForDisplay = (dateString) => {
     if (!dateString) return "";
     
-    // Nếu là string date, lấy phần YYYY-MM-DD
     if (typeof dateString === 'string' && dateString.includes('T')) {
       return dateString.split('T')[0];
     }
     
-    // Nếu là string date đơn giản
     if (typeof dateString === 'string' && dateString.includes('-')) {
       return dateString;
     }
     
-    // Nếu là Date object, format về YYYY-MM-DD
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];
   };
@@ -37,7 +33,7 @@ export default function SemesterList({ setSelected, reloadFlag, reload }) {
   }, [reloadFlag]);
 
   const handleDelete = async (id) => {
-    if (confirm("Bạn có chắc muốn xoá học kỳ này không?")) {
+    if (confirm("Bạn có chắc muốn xoá học kỳ này không? Tất cả dữ liệu liên quan sẽ bị xoá.")) {
       try {
         await deleteSemester(id);
         reload();
@@ -53,7 +49,7 @@ export default function SemesterList({ setSelected, reloadFlag, reload }) {
         <tr>
           <th className="border p-2">ID</th>
           <th className="border p-2">Tên</th>
-          <th className="border p-2">Năm</th>
+          <th className="border p-2">Năm bắt đầu</th>
           <th className="border p-2">Từ ngày</th>
           <th className="border p-2">Đến ngày</th>
           <th className="border p-2">Hành động</th>

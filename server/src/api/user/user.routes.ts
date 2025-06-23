@@ -109,6 +109,7 @@ userRegistry.registerPath({
 
 userRouter.put(
   "/:id",
+  authenticate,
   validateRequest(UpdateUserSchema),
   userController.updateUser
 );

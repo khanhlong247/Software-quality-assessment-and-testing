@@ -48,6 +48,29 @@ export class ClassSectionService {
       );
     }
   }
+  async getAllClassSectionsDetails() {
+    try {
+      const result = await this.classSectionRepository.getAllClassSectionsDetails();
+      if (!result || result.length === 0) {
+        return ServiceResponse.failure(
+          "No class sections found",
+          null,
+          StatusCodes.NOT_FOUND
+        );
+      }
+      return ServiceResponse.success("Class sections found", result);
+    } catch (error) {
+      const errorMessage = `Error finding all class sections: $${
+        (error as Error).message
+      }`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure(
+        "An error occurred while retrieving class sections.",
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 
   async getClassSectionById(
     id: number
@@ -243,15 +266,22 @@ export class ClassSectionService {
     try {
       let grade = 1;
 
-        console.log(
+      console.log(
         "THIS IS DATA UPDATE >>>> ",
-        "id", id,
-        "full_name", full_name,
-        "total_students", total_students,
-        "course_id", course_id,
-        "semester_id", semester_id,
-        "teacher_id", teacher_id,
-        "grade", grade
+        "id",
+        id,
+        "full_name",
+        full_name,
+        "total_students",
+        total_students,
+        "course_id",
+        course_id,
+        "semester_id",
+        semester_id,
+        "teacher_id",
+        teacher_id,
+        "grade",
+        grade
       );
       const isExists = await this.classSectionRepository.isClassSectionExists(
         "id",
@@ -297,16 +327,22 @@ export class ClassSectionService {
         );
       }
 
-      if (total_students <= 200 && total_students > 150) {
-        grade = 3.0;
-      } else if (total_students <= 150 && total_students > 100) {
-        grade = 2.5;
-      } else if (total_students <= 100 && total_students > 50) {
-        grade = 2.0;
-      } else if (total_students <= 50 && total_students > 0) {
-        grade = 1.5;
+      if (total_students <= 160 && total_students > 80) {
+        grade = 0.4;
+      } else if (total_students < 80 && total_students >= 70) {
+        grade = 0.3;
+      } else if (total_students < 70 && total_students >= 60) {
+        grade = 0.2;
+      } else if (total_students < 60 && total_students >= 50) {
+        grade = 0.1;
+      } else if (total_students < 50 && total_students >= 40) {
+        grade = 0;
+      } else if (total_students < 40 && total_students >= 30) {
+        grade = -0.1;
+      } else if (total_students < 30 && total_students >= 20) {
+        grade = -0.2;
       } else {
-        grade = 1.0;
+        grade = -0.3;
       }
 
       const result = await this.classSectionRepository.updateClassSection(

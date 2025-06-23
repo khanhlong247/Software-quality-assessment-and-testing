@@ -6,6 +6,24 @@ export class ClassSectionRepository {
     const result = await db("classes").select("*");
     return result;
   }
+  async getAllClassSectionsDetails() {
+    const result = await db("classes as c")
+      .leftJoin("teachers as t", "c.teacher_id", "t.id")
+      .leftJoin("users as u", "t.user_id", "u.id")
+      .join("courses as cou", "c.course_id", "cou.id")
+      .join("semesters as s", "c.semester_id", "s.id")
+      .select(
+        "c.id as id",
+        "c.full_name as full_name",
+        "c.total_students as total_students",
+        "cou.name as course_id",
+        "s.name as semester_id",
+        "u.full_name as teacher_id",
+        "c.grade as grade",
+        "s.start_year as start_year"
+      );
+    return result;
+  }
 
   async createClassSection(
     full_name: string,

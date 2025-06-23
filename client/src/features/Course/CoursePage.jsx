@@ -7,8 +7,9 @@ export default function CoursePage() {
   const [selected, setSelected] = useState(null);
   const [course, setCourses] = useState([]);
   const [forbidden, setForbidden] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
+    setIsLoading(true);
     getAllCourses()
       .then((res) => {
         if (error.response.status === 403 || error.response.status === 401) {
@@ -25,8 +26,19 @@ export default function CoursePage() {
         ) {
           setForbidden(true);
         }
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
   if (forbidden) {
     return (
       <div className="forbidden-message">

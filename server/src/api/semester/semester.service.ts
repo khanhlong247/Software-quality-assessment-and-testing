@@ -65,18 +65,7 @@ export class SemesterService {
         end_date: Date
     ): Promise<ServiceResponse<number | null>> {
         try {
-            const name_exists = await this.semesterRepository.isSemesterExists(
-                "name",
-                name
-            );
-            if (name_exists) {
-                logger.error("Semester already exists!");
-                return ServiceResponse.failure(
-                    "Semester with this name already exists!",
-                    null,
-                    StatusCodes.BAD_REQUEST
-                );
-            }
+
             const result = await this.semesterRepository.createSemester(
                 name,
                 start_year,
@@ -117,19 +106,7 @@ export class SemesterService {
                     StatusCodes.NOT_FOUND
                 );
             }
-            const name_exists = await this.semesterRepository.getSemesterBy(
-                "name",
-                name
-            );
 
-            if (name_exists && name_exists.id !== id) {
-                logger.error("Semester with this name already exists!");
-                return ServiceResponse.failure(
-                    "Semester with this name already exists!",
-                    null,
-                    StatusCodes.BAD_REQUEST
-                );
-            }
             const result = await this.semesterRepository.updateSemester(
                 id,
                 name,

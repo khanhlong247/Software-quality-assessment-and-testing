@@ -26,6 +26,7 @@ export default function ClassSectionList({ setSelected, reloadFlag, reload }) {
           <th className="border p-2">Số sinh viên</th>
           <th className="border p-2">Học phần</th>
           <th className="border p-2">Học kỳ</th>
+          <th className="border p-2">Năm Học</th>
           <th className="border p-2">Giảng viên</th>
           <th className="border p-2">Hệ số lớp</th>
           <th className="border p-2">Hành động</th>
@@ -39,6 +40,7 @@ export default function ClassSectionList({ setSelected, reloadFlag, reload }) {
             <td className="border p-2">{s.total_students}</td>
             <td className="border p-2">{s.course_id}</td>
             <td className="border p-2">{s.semester_id}</td>
+            <td className="border p-2">{s.start_year}</td>
             <td className="border p-2">{s.teacher_id || "Chưa có"}</td>
             <td className="border p-2">{s.grade ?? "-"}</td>
             <td className="border p-2 space-x-2">

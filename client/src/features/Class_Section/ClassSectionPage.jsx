@@ -7,9 +7,10 @@ export default function ClassSectionPage() {
   const [selected, setSelected] = useState(null);
   const [reloadFlag, setReloadFlag] = useState(Date.now());
   const [forbidden, setForbidden] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
   const reload = () => setReloadFlag(Date.now());
   useEffect(() => {
+    setIsLoading(true);
     getAllClassSections()
       .then((res) => {
         if (error.response.status === 403 || error.response.status === 401) {
@@ -26,8 +27,18 @@ export default function ClassSectionPage() {
         ) {
           setForbidden(true);
         }
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
   if (forbidden) {
     return (
       <div className="forbidden-message">

@@ -2,14 +2,15 @@ import { useState, useEffect } from "react";
 import FacultyForm from "./FacultyForm";
 import FacultyList from "./FacultyList";
 import { getAllFaculties } from "../../services/facultyService";
-import "./faculty.css";
 
 export default function FacultyPage() {
   const [selected, setSelected] = useState(null);
   const [faculties, setFaculties] = useState([]);
   const [forbidden, setForbidden] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     getAllFaculties()
       .then((res) => {
         if (error.response.status === 403 || error.response.status === 401) {
@@ -26,9 +27,18 @@ export default function FacultyPage() {
         ) {
           setForbidden(true);
         }
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
-
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
   if (forbidden) {
     return (
       <div className="forbidden-message">
