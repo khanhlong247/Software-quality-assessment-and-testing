@@ -161,4 +161,14 @@ export const commonValidations = {
     .max(9, "Số lượng lớp không được vượt quá 9")
     .int("Số lượng lớp phải là số nguyên")
     .positive("Số lượng lớp phải là số dương"),
+
+  money_credit: z
+    .number({
+      required_error: "Số tiền mỗi tín là bắt buộc",
+      invalid_type_error: "Số tiền mỗi tín phải là số",
+    })
+    .min(10000, "Số tiền mỗi tín phải ít nhất là 10000")
+    .max(10000000, "Số tiền mỗi tín không được vượt quá 10000000")
+    .int("Số tiền mỗi tín phải là số nguyên")
+    .positive("Số tiền mỗi tín phải là số dương"),
 };

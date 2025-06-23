@@ -11,6 +11,7 @@ export const UserSchema = z.object({
 	email: z.string().email(),
 	hash_password: z.string(),
 	role: z.string(),
+	phone: z.number()
 });
 
 export const GetUserSchema = z.object({
@@ -34,5 +35,13 @@ export const UpdateUserSchema = z.object({
 	body: z.object({
 		full_name: commonValidations.full_name,
 		phone: commonValidations.phone,
+	}),
+});
+
+export const ChangePasswordSchema = z.object({
+	body: z.object({
+		full_name: commonValidations.full_name,
+		current_password: commonValidations.password,
+		new_password: commonValidations.password,
 	}),
 });

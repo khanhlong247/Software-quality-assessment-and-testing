@@ -40,7 +40,14 @@ class MoneyController {
       });
     }
   };
-
+  public changeMoneyPerCredit: RequestHandler = async (
+    req: Request,
+    res: Response
+  ) => {
+    const { money } = req.body;
+    const serviceResponse = await moneyService.changeMoneyPerCredit(money);
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
 }
 
 export const moneyController = new MoneyController();

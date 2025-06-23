@@ -76,6 +76,26 @@ export default function Sidebar() {
               Báo cáo và thống kê
             </NavLink>
           </li>
+          <li className="sidebar-nav-item">
+            <NavLink
+              to="/users"
+              className={({ isActive }) =>
+                `sidebar-nav-link ${isActive ? "active" : ""}`
+              }
+            >
+              Quản lý người dùng
+            </NavLink>
+          </li>
+          <li className="sidebar-nav-item">
+            <NavLink
+              to="/system"
+              className={({ isActive }) =>
+                `sidebar-nav-link ${isActive ? "active" : ""}`
+              }
+            >
+              Hệ thống
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </aside>

@@ -69,7 +69,7 @@ export default function TeacherPage() {
   } else {
     return (
       <div className="p-4">
-        <h1 className="text-xl font-bold mb-4">Quản lý Giảng viên</h1>
+        <h1 className="function-title">Quản lý Giảng viên</h1>
 
         <button
           className="bg-green-600 text-white px-3 py-1 rounded mb-4 hover:bg-green-700"

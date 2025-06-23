@@ -86,4 +86,8 @@ export class MoneyRepository {
     return query;
   }
 
+  async changeMoneyPerCredit(money: Number): Promise<Number> {
+    const result = await db("credit").update({ money }).where({ id: 1 });
+    return result;
+  }
 }

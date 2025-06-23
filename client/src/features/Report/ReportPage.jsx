@@ -77,7 +77,7 @@ export default function ReportPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Báo cáo thống kê</h1>
+      <h1 className="function-title">Báo cáo thống kê</h1>
       <div className="query-wrap-report">
         <div className="query-select">
           <div>

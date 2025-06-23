@@ -50,7 +50,7 @@ export default function DegreePage() {
   } else {
     return (
       <div className="p-4">
-        <h1 className="text-xl font-bold mb-4">Quản lý Bằng cấp</h1>
+        <h1 className="function-title">Quản lý Bằng cấp</h1>
         <DegreeForm selected={selected} setSelected={setSelected} />
         <DegreeList setSelected={setSelected} />
       </div>

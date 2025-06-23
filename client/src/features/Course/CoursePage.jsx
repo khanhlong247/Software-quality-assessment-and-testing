@@ -50,7 +50,7 @@ export default function CoursePage() {
   } else {
     return (
       <div className="p-4">
-        <h1 className="text-xl font-bold mb-4">Quản lý Học phần</h1>
+        <h1 className="function-title">Quản lý Học phần</h1>
         <CourseForm selected={selected} setSelected={setSelected} />
         <CourseList setSelected={setSelected} />
       </div>

@@ -50,7 +50,7 @@ export default function ClassSectionPage() {
   } else {
     return (
       <div className="p-4">
-        <h1 className="text-xl font-bold mb-4">Quản lý Lớp học phần</h1>
+        <h1 className="function-title">Quản lý Lớp học phần</h1>
         <ClassSectionForm
           selected={selected}
           setSelected={setSelected}

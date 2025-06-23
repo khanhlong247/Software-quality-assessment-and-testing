@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import {
+  ChangePasswordSchema,
   CreateUserSchema,
   GetUserSchema,
   UpdateUserSchema,
@@ -30,7 +31,7 @@ userRegistry.registerPath({
 userRouter.get(
   "/",
   authenticate,
-  authorize(["admin", "moderator"]),
+  authorize(["admin"]),
   userController.getAllUsers
 );
 
@@ -47,7 +48,7 @@ userRegistry.registerPath({
 userRouter.get(
   "/:id",
   authenticate,
-  authorize(["admin", "moderator"]),
+  authorize(["admin"]),
   validateRequest(GetUserSchema),
   userController.getUserById
 );
@@ -83,9 +84,19 @@ userRegistry.registerPath({
 userRouter.post(
   "/",
   authenticate,
-  authorize(["admin", "moderator"]),
+  authorize(["admin"]),
   validateRequest(CreateUserSchema),
   userController.createUser
+);
+
+// force change password 
+
+userRouter.put(
+  "/change-password",
+  authenticate,
+  authorize(["admin"]),
+  validateRequest(ChangePasswordSchema),
+  userController.changePassword
 );
 
 // Update an user information
@@ -128,7 +139,8 @@ userRegistry.registerPath({
 userRouter.delete(
   "/:id",
   authenticate,
-  authorize(["admin", "moderator"]),
+  authorize(["admin"]),
   validateRequest(GetUserSchema),
   userController.deleteUser
 );
+

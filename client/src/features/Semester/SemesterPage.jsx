@@ -51,7 +51,7 @@ export default function SemesterPage() {
   } else {
     return (
       <div className="p-4">
-        <h1 className="text-xl font-bold mb-4">Quản lý Học kỳ</h1>
+        <h1 className="function-title">Quản lý Học kỳ</h1>
         <SemesterForm
           selected={selected}
           setSelected={setSelected}
