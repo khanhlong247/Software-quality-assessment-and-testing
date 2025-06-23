@@ -1,0 +1,108 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --background-color: #121212;
+  --text-color: #ffffff;
+  --header-bg: #1a1a1a;
+  --header-text: #ffffff;
+  --sidebar-bg: #1a1a1a;
+  --sidebar-text: rgba(255, 255, 255, 0.87);
+  --main-bg: #1e1e1e;
+  --table-bg: #2c2c2c;
+  --table-border: #444444;
+  --button-bg: #333333;
+  --button-text: #ffffff;
+  --button-hover-bg: #444444;
+  --link-color: #646cff;
+  --link-hover-color: #535bf2;
+  --logout-bg: #ef4444;
+  --logout-hover-bg: #dc2626;
+  --login-bg: #22c55e;
+  --login-hover-bg: #16a34a;
+  --input-bg: #2c2c2c;
+  --input-text: #ffffff;
+}
+
+.light-mode {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --header-bg: #ffffff;
+  --header-text: #000000;
+  --sidebar-bg: #f4f4f4;
+  --sidebar-text: #213547;
+  --main-bg: #fafafa;
+  --table-bg: #f2f2f2;
+  --table-border: #dddddd;
+  --button-bg: #007bff;
+  --button-text: #ffffff;
+  --button-hover-bg: #0056b3;
+  --link-color: #646cff;
+  --link-hover-color: #747bff;
+  --logout-bg: #ef4444;
+  --logout-hover-bg: #dc2626;
+  --login-bg: #22c55e;
+  --login-hover-bg: #16a34a;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  width: 100%;
+  height: 100vh;
+  box-sizing: border-box;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+a {
+  font-weight: 500;
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--link-hover-color);
+}
+
+h1 {
+  font-size: 3.2rem;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  cursor: pointer;
+  transition: background-color 0.25s, border-color 0.25s;
+}
+
+button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
